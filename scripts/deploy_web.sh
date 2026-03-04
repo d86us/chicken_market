@@ -1,40 +1,26 @@
 #!/bin/bash
+set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-TEMP_DIR="$PROJECT_DIR/.gh-pages-deploy"
-LOG_FILE="$PROJECT_DIR/deploy.log"
+echo "Building Flutter web..."
+flutter build web --release --base-href /chicken_market/
 
-(
-  set -e
+echo "Deploying to GitHub Pages..."
 
-  echo "Building Flutter web app..." >> "$LOG_FILE"
+# Create a temporary directory outside the project
+TEMP_DIR=$(mktemp -d)
+cp -r build/web/* "$TEMP_DIR/"
 
-  cd "$PROJECT_DIR"
-  flutter build web --release >> "$LOG_FILE" 2>&1
+cd "$TEMP_DIR"
 
-  echo "Deploying to GitHub Pages..." >> "$LOG_FILE"
+git init
+git checkout --orphan gh-pages
 
-  rm -rf "$TEMP_DIR"
-  mkdir -p "$TEMP_DIR"
+git add -A
+git commit -m "Deploy to GitHub Pages: $(date)" 2>/dev/null || echo "No changes to deploy"
+git push origin gh-pages:gh-pages --force
 
-  cp -r "$PROJECT_DIR/build/web/"* "$TEMP_DIR/"
+# Cleanup
+cd -
+rm -rf "$TEMP_DIR"
 
-  cd "$TEMP_DIR"
-
-  git init
-  git checkout -b gh-pages
-
-  git add -A
-  git commit -m "Deploy to GitHub Pages"
-
-  git push -f origin gh-pages
-
-  cd "$PROJECT_DIR"
-  rm -rf "$TEMP_DIR"
-
-  echo "Done! Your site is live at: https://d86us.github.io/chicken_market/" >> "$LOG_FILE"
-) &
-
-echo "Deploy started in background. PID: $!"
-echo "Check progress with: tail -f deploy.log"
+echo "Deployed! Visit https://d86us.github.io/chicken_market/"
