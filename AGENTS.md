@@ -26,10 +26,15 @@ This is a **Flutter/Dart** mobile application. The project uses Flutter SDK ^3.1
 > 
 > Never run `flutter run` directly. Always use:
 > ```bash
+> # For Android device (default)
 > ./scripts/run_app.sh
+> 
+> # For Chrome browser
+> ./scripts/run_web.sh
 > ```
 > 
-> This script launches scrcpy (or brings it to front if already running) and runs the app on your Android device.
+> - `run_app.sh` - launches scrcpy and runs the app on your Android device
+> - `run_web.sh` - runs the app in Chrome browser
 
 ```bash
 # Run on all platforms
