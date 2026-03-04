@@ -77,6 +77,22 @@ flutter build windows --release
 flutter build web --release
 ```
 
+### Deploying to GitHub Pages
+
+Run the deploy script:
+```bash
+./scripts/deploy_web.sh
+```
+
+Check deployment progress:
+```bash
+tail -f deploy.log
+```
+
+Live site: **https://d86us.github.io/chicken_market/**
+
+Note: GitHub Pages may take 1-2 minutes to update after deployment.
+
 ### Code Analysis and Linting
 
 ```bash
